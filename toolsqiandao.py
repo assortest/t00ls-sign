@@ -62,7 +62,7 @@ def get_safe_log(text):
         return text[:50] + "..."
 
 # ===== Server酱通知 =====
-def send_serverchan(title,content)
+def send_serverchan(title,content):
     if not SCKEY:
         print("尚未配置Server酱,跳过")
         return
