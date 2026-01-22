@@ -9,6 +9,7 @@
 - 自动登录并签到
 - 支持钉钉机器人通知（可选）
 - 支持 GitHub Actions 定时运行
+- 支持 Server酱通知（可选）
 
 ## GitHub Actions 配置
 
@@ -30,6 +31,7 @@
 | `T00LS_ANSWER` | ❌ | 安全问题答案 |
 | `DD_ACCESS_TOKEN` | ❌ | 钉钉机器人 access_token |
 | `DD_SECRET` | ❌ | 钉钉机器人加签密钥 |
+| `SCKEY` | ❌ |Server酱加签密钥 |
 
 ### 3. 配置钉钉通知（可选）
 
