@@ -1,3 +1,4 @@
+from requests import Response
 import os
 import re
 import time
@@ -12,29 +13,9 @@ import requests
 def getenv(name, default=""):
     v = os.environ.get(name)
     return default if v is None or str(v).strip() == "" else str(v).strip()
-# 日志脱敏
-def get_safe_log(text):
-    """
-    尝试解析 JSON 并隐藏敏感字段，如果不是 JSON 则截断输出
-    """
-    try:
-        data = json.loads(text)
-        # 1. 隐藏 Cookie
-        if "cookie" in data:
-            data["cookie"] = "****** (已隐藏)"
-        
-        # 2. 隐藏 formhash (只保留前2位)
-        if "formhash" in data:
-            fh = str(data["formhash"])
-            data["formhash"] = fh[:2] + "***" if len(fh) > 2 else "***"
 
-        # 返回处理后的 JSON 字符串
-        return json.dumps(data, ensure_ascii=False)
-    except:
-        # 如果解析失败，说明不是标准JSON，只截取前 50 个字符
-        return text[:50] + "..."
-
-
+#Server酱通知
+SCKEY = getenv("SCKEY")
 
 # T00ls 账户
 USERNAME   = getenv("T00LS_USERNAME")
@@ -57,6 +38,46 @@ HTTPS_PROXY = getenv("HTTPS_PROXY", getenv("https_proxy", ""))
 PROXIES = {}
 if HTTP_PROXY:  PROXIES["http"]  = HTTP_PROXY
 if HTTPS_PROXY: PROXIES["https"] = HTTPS_PROXY
+
+# 日志脱敏
+def get_safe_log(text):
+    """
+    尝试解析 JSON 并隐藏敏感字段，如果不是 JSON 则截断输出
+    """
+    try:
+        data = json.loads(text)
+        # 1. 隐藏 Cookie
+        if "cookie" in data:
+            data["cookie"] = "****** (已隐藏)"
+        
+        # 2. 隐藏 formhash (只保留前2位)
+        if "formhash" in data:
+            fh = str(data["formhash"])
+            data["formhash"] = fh[:2] + "***" if len(fh) > 2 else "***"
+
+        # 返回处理后的 JSON 字符串
+        return json.dumps(data, ensure_ascii=False)
+    except:
+        # 如果解析失败，说明不是标准JSON，只截取前 50 个字符
+        return text[:50] + "..."
+
+# ===== Server酱通知 =====
+def send_serverchan(title,content)
+    if not SCKEY:
+        print("尚未配置Server酱,跳过")
+        return
+    url = f"https://sc.ftqq.com/{SCKEY}.send"
+    data={
+        "text":title,
+        "desp":content
+    }
+    try:
+        resp = requests.post(url,data=data)
+        print("Server酱通知:",resp.text)
+    except Exception as e:
+        print(f"Server酱通知异常：{e}")
+    
+    
 
 # ===== 钉钉通知 =====
 def send_dingtalk(title: str, content: str):
@@ -154,7 +175,7 @@ def main():
         uid = uid_match.group(1) if uid_match else None
         formhash = formhash_match.group(1) if formhash_match else login_formhash
         if not formhash:
-            raise Exception("未提取到 formhash（登录/资料页均未返回）")
+            raise Exception("未提取到 formhash(登录/资料页均未返回)")
 
         # 3) 签到
         sign_url = f"{BASE_URL}/ajax-sign.json"
@@ -167,6 +188,7 @@ def main():
 
         raw = sign_resp.text
         print("签到结果：", raw[:500])
+        send_serverchan("T00ls 签到", f"**签到结果**:\n\n```{raw}```")
 
         # —— 结果分类：成功 / 已签过 / 失败 —— #
         status = "unknown"
@@ -192,6 +214,7 @@ def main():
         err = f"{type(e).__name__}: {e}"
         print("异常：", err)
         send_dingtalk("T00ls 签到失败", f"**错误信息**：\n\n```\n{err}\n```")
+        send_serverchan("T00ls 签到失败", f"**错误信息**：\n\n```\n{err}\n```")
 
 if __name__ == "__main__":
     main()
