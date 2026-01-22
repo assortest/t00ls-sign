@@ -28,4 +28,5 @@ jobs:
           T00LS_ANSWER: ${{ secrets.T00LS_ANSWER }}
           DD_ACCESS_TOKEN: ${{ secrets.DD_ACCESS_TOKEN }}
           DD_SECRET: ${{ secrets.DD_SECRET }}
+          SCKEY: ${{ secrets.SCKEY }}
         run: python toolsqiandao.py
