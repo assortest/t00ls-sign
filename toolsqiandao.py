@@ -73,7 +73,7 @@ def send_serverchan(title,content):
     }
     try:
         resp = requests.post(url,data=data)
-        print("Server酱通知:",resp.text)
+        print("Server酱通知成功")
     except Exception as e:
         print(f"Server酱通知异常：{e}")
     
