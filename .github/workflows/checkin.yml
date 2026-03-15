@@ -6,9 +6,6 @@ on:
     - cron: '0 17 * * *'
   workflow_dispatch:
 
-permissions:
-  contents: write
-  
 jobs:
   checkin:
     runs-on: ubuntu-latest
@@ -33,5 +30,3 @@ jobs:
           DD_SECRET: ${{ secrets.DD_SECRET }}
           SCKEY: ${{ secrets.SCKEY }}
         run: python toolsqiandao.py
-      - name: Keep workflow alive
-        uses: gautamkrishnar/keepalive-workflow@v2
