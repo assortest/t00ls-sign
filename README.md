@@ -4,7 +4,7 @@
 
 签到脚本来源：[HanZeYu-momo/Automatic-check-in-script-for-t00ls](https://github.com/HanZeYu-momo/Automatic-check-in-script-for-t00ls)
 
-## 功能
+## 功能 
 
 - 自动登录并签到
 - 支持钉钉机器人通知（可选）
