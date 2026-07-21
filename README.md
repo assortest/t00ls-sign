@@ -13,7 +13,7 @@
 
 ## GitHub Actions 配置
 
-### 1. Fork 本仓库
+### 1. Fork 本仓库 
 
 ### 2. 配置 Secrets
 
